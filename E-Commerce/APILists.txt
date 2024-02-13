@@ -1,0 +1,49 @@
+ProductController
+Products
+Get Products
+Add a product
+Get one product
+Rate product.
+Filter product.
+
+
+UserController
+SignUp - Email, Name, Password, TypeOfUser(customer, seller)
+SignIn - (Email, Password);
+
+{
+    _id:Product category 1,
+    averagePrice:5
+}
+
+
+2. Find the average rating of a product
+
+db.products.aggregate([
+    // 1. Create documents for ratings
+
+    {
+        $unwind:"$ratings"
+    },
+    {
+        $group:{
+            _id:"$name",
+            averageRating:{$avg:"$ratings.rating"}
+        }
+    }
+])
+
+
+
+
+3. Count the number of rating of a product
+
+db.products.aggregate([
+    //1.Project name of product and countOfRating    //2. Sort the collection   //3. limit to just 2 item in result
+    { $project:{name:1,  countOfRating:{ $cond:{if:{$isArray:"$ratings"},then:{$size:"$ratings"},else:0 } } } },
+    { $sort:{countOfRating:1 } },
+    {$limit:2}
+    ])
+
+
+4.
